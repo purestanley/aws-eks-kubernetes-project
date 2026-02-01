@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator
+  namespace: purestanley-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+      - name: vegeta
+        image: peterevans/vegeta:latest
+        command: ["sh", "-c"]
+        args:
+        - |
+          while true; do
+            sleep 30
+            echo "Starting load test..."
+            echo "GET http://purestanley-webapp-service.purestanley-app.svc.cluster.local" | vegeta attack -rate=100 -duration=300s | vegeta report
+          done

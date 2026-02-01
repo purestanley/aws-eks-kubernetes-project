@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: purestanley-app-config
+  namespace: purestanley-app
+data:
+  app.name: "PureStanley Web Application"
+  app.version: "1.0.0"
+  app.environment: "development"
+  welcome.message: "Welcome to PureStanley's Kubernetes Demo!"
+  log.level: "INFO"
+  server.port: "8080"

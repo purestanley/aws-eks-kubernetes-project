@@ -1,0 +1,73 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: purestanley-dashboards
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  kubernetes-cluster.json: |-
+    {
+      "dashboard": {
+        "title": "Kubernetes Cluster - PureStanley",
+        "panels": [
+          {
+            "title": "Cluster CPU Usage",
+            "type": "stat",
+            "targets": [{
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace!=\"\"}[5m]))",
+              "legendFormat": "CPU Usage"
+            }]
+          },
+          {
+            "title": "Cluster Memory Usage",
+            "type": "stat",
+            "targets": [{
+              "expr": "sum(container_memory_working_set_bytes{namespace!=\"\"})",
+              "legendFormat": "Memory Usage"
+            }]
+          },
+          {
+            "title": "Pod Count",
+            "type": "stat",
+            "targets": [{
+              "expr": "count(kube_pod_info)",
+              "legendFormat": "Total Pods"
+            }]
+          }
+        ]
+      }
+    }
+  
+  purestanley-app.json: |-
+    {
+      "dashboard": {
+        "title": "PureStanley Application",
+        "panels": [
+          {
+            "title": "Application CPU",
+            "type": "graph",
+            "targets": [{
+              "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"purestanley-app\"}[5m])) by (pod)",
+              "legendFormat": "{{pod}}"
+            }]
+          },
+          {
+            "title": "Application Memory",
+            "type": "graph",
+            "targets": [{
+              "expr": "sum(container_memory_working_set_bytes{namespace=\"purestanley-app\"}) by (pod)",
+              "legendFormat": "{{pod}}"
+            }]
+          },
+          {
+            "title": "HTTP Requests",
+            "type": "graph",
+            "targets": [{
+              "expr": "rate(http_requests_total{namespace=\"purestanley-app\"}[5m])",
+              "legendFormat": "Requests/s"
+            }]
+          }
+        ]
+      }
+    }

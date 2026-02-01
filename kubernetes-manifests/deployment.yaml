@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: purestanley-webapp
+  namespace: purestanley-app
+  labels:
+    app: purestanley-webapp
+    owner: purestanley
+    tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: purestanley-webapp
+  template:
+    metadata:
+      labels:
+        app: purestanley-webapp
+        owner: purestanley
+    spec:
+      containers:
+      - name: webapp
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        env:
+        - name: APP_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: purestanley-app-config
+              key: app.name
+        - name: WELCOME_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: purestanley-app-config
+              key: welcome.message
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: purestanley-app-config
+              key: app.environment
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5

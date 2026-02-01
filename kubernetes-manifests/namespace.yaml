@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: purestanley-app
+  labels:
+    owner: purestanley
+    project: kubernetes-demo
+    environment: dev

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: purestanley-webapp-service
+  namespace: purestanley-app
+  labels:
+    app: purestanley-webapp
+    owner: purestanley
+spec:
+  selector:
+    app: purestanley-webapp
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  type: LoadBalancer
